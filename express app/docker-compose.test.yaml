@@ -1,0 +1,46 @@
+version: '3.7'
+
+services:
+  express-app1:
+    image: nandanisah/express-app1:latest
+    ports:
+      - "3000:3000"
+    networks:
+      - my-network
+
+  express-app1-dapr:
+    image: daprio/dapr:latest
+    command: ["./daprd",
+      "-app-id", "express-app1",
+      "-app-port", "3000",
+      "--dapr-http-port", "3500",
+      "-components-path", "/components"
+    ]
+    volumes:
+      - "./components/:/components"
+    networks:
+      - my-network
+
+  express-app2:
+    image: nandanisah/express-app2:latest
+    ports:
+      - "3002:3002"
+    networks:
+      - my-network
+
+  express-app2-dapr:
+    image: daprio/dapr:latest
+    command: ["./daprd",
+      "-app-id", "express-app2",
+      "-app-port", "3002",
+      "--dapr-http-port", "3500",
+      "-components-path", "/components"
+    ]
+    volumes:
+      - "./components/:/components"
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: overlay

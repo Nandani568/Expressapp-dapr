@@ -1,0 +1,53 @@
+version: '3'
+services:
+  ############################
+  # Node app + Dapr sidecar
+  ############################
+  express-app1:
+    build: ./express-app1
+    ports:
+      - "3000:3000"
+    networks:
+      - my-network
+  express-app1-dapr:
+    image: "daprio/daprd:edge"
+    command: ["./daprd",
+     "-app-id", "express-app1",
+     "-app-port", "3000",
+     "--dapr-http-port", "3500",
+     "-components-path",
+        "/components",
+      ]
+    volumes:
+      - "./components/:/components"
+    networks:
+      - my-network
+    depends_on:
+      - express-app1
+
+
+  express-app2:
+    build: ./express-app2
+    ports:
+      - "3002:3002"
+    networks:
+      - my-network
+  express-app2-dapr:
+    image: "daprio/daprd:edge"
+    command: ["./daprd",
+     "-app-id", "express-app2",
+     "-app-port", "3002",
+     "--dapr-http-port", "3500",
+      "-components-path",
+        "/components",
+      ]
+    volumes:
+      - "./components/:/components"
+    networks:
+      - my-network
+    depends_on:
+      - express-app2
+     
+networks:
+    my-network:
+    
