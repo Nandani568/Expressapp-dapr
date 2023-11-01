@@ -6,7 +6,7 @@
 # CMD [ "node", "app.js" ]
 
 
-FROM node:18
+FROM --platform=linux/amd64  node:18
 
 # Install Dapr CLI
 RUN wget -q https://raw.githubusercontent.com/dapr/cli/master/install/install.sh -O - | /bin/bash
